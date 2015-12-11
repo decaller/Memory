@@ -11,11 +11,11 @@ public class LevelMaker {
     public Position makeLevel(int lvl, int sublvl) {
         switch (lvl){
             case 1 : {
-                sumCard = 10;
+                sumCard = 6;
                 break;
             }
             case 2 : {
-                sumCard = 16;
+                sumCard = 12;
                 break;
             }
             case 3 : {
@@ -31,24 +31,24 @@ public class LevelMaker {
             switch (sublvl){
                 case 1 : { //number
                     int number = rand.nextInt(100)+1;
-                    Position.setCard(Integer.toString(number));
+                    soal.setCard(Integer.toString(number));
                     break;
                 }
                 case 2 : { //character
                     int number = rand.nextInt(47);
                     char symbol = (char) (48 + number);
-                    Position.setCard(Character.toString(symbol));
+                    soal.setCard(Character.toString(symbol));
                     break;
                 }
                 case 3 : { //big number
                     int number = rand.nextInt(100000)+1;
-                    Position.setCard(Integer.toString(number));
+                    soal.setCard(Integer.toString(number));
                     break;
                 }
                 case 4 : { //symbol
                     int number = rand.nextInt(127);
                     char symbol = (char) (number);
-                    Position.setCard(Character.toString(symbol));
+                    soal.setCard(Character.toString(symbol));
                     break;
                 }
             }

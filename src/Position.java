@@ -16,11 +16,10 @@ public class Position {
         for (int i = 1; i <= 2; i++){
             pos.add(content);
         }
-
     }
 
-    public ArrayList<Card> getCards() {
-        return cards;
+    public ArrayList<String> getPos() {
+        return pos;
     }
 
     public void randomize() {
