@@ -16,40 +16,55 @@ public class Menu {
     private JProgressBar timeProgressBar;
     private JProgressBar levelProgressBar;
     private JLabel highLevelLabel;
-    private static JPanel gamePanel;
+    private JPanel gamePanel;
     private JButton buttonStart;
 
-    public static int level = 1;
-    public static int sublevel = 1;
+    public int level = 1;
+    public int sublevel = 1;
 
-    private static LevelMaker makerSoal = new LevelMaker();
+    private LevelMaker makerSoal = new LevelMaker();
 
-    public static ArrayList<Card> cards;
-    public static String temp = null;
-    public static int tempId = 0;
+    public ArrayList<Card> cards;
+    public String temp = null;
+    public int tempId = 0;
 
+    public Card kartu;
 
     public Menu() {
+
         startGameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 startLevel();
-                //TODO timer
+                //nanti tambah timer
             }
         });
-    }
 
-    private static void startLevel(){
-        //levelLabel.setText(Integer.toString(level));
-        //panelMenu.repaint();
+        //TODO ini masalah nya yan.. ini mau diimplementasikan ke seluruh kartu... define nya dibawah \/
+        kartu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                kartu.setOpen(true);
+                int id = kartu.getId();
+                String content = kartu.getContent();
+                cardChecker(id,content);
+            }
+        });
+
+    }
+    //untuk mulai
+    private void startLevel(){
+        levelLabel.setText(Integer.toString(level));
+        panelMenu.repaint();
         startSubLevel();
     }
-    private static void startSubLevel(){
+    private void startSubLevel(){
         Position soal = makerSoal.makeLevel(level,sublevel);
         drawer(soal);
     }
 
-    private static void drawer(Position soal){
+    //gambar di game panel
+    private void drawer(Position soal){
         //remove all
         gamePanel.removeAll();
         gamePanel.repaint();
@@ -75,7 +90,7 @@ public class Menu {
 
         int i = 1;
         for (String isiKartu : isiKartu2){ //buat kartu...
-            Card kartu = new Card(i, isiKartu);
+            kartu = new Card(i, isiKartu);// TODO disini buat kartunya yan.. apa pake abstract ya??
             gamePanel.add(kartu);
             cards.add(kartu);
             i++;
@@ -86,7 +101,9 @@ public class Menu {
 
     }
 
-    public static void cardChecker(int id, String content){
+    //check apa kartunya sama?
+    public void cardChecker(int id, String content){
+        System.out.println("card check "+id);
         if (temp == null){
             temp = content;
             tempId = id;
@@ -99,10 +116,10 @@ public class Menu {
                     }
                 }
                 closeCardChecker();
-            } else {
-                temp = null;
-                tempId = 0;
             }
+            temp = null;
+            tempId = 0;
+
         }
         //close all not guessed
         for (Card kartu : cards){
@@ -113,24 +130,32 @@ public class Menu {
 
     }
 
-    private static void closeCardChecker(){
+    //check apa udah ketebak semua?
+    private void closeCardChecker(){
+        System.out.println("close card check");
+        int unGuessed = 0;
         for (Card kartu : cards){
             if (!kartu.isGuessed()){
-                break;
-            } else {
-                replay();
+                unGuessed++;
             }
+        }
+        if (unGuessed == 0){
+            //Menu reMenu = new Menu(); TODO ini gw coba juga yan.. bisa run tapi gak mau lanjut ke level selanjutnya
+            //reMenu.replay();
+            this.replay();
         }
     }
 
-    private static void replay() {
+    //ulang sublevel atau level
+    private void replay() {
+        System.out.println("Replay");
         if (sublevel <= 5-level){
-            //levelProgressBar.setValue(100*sublevel/(5-level));
+            System.out.println("New SubLevel");
+            levelProgressBar.setValue(100*sublevel/(5-level));
             sublevel++;
             startSubLevel();
-        }
-
-        if (level <= 3){ // ada 3 level
+        } else if (level <= 3){ // ada 3 level
+            System.out.println("New Level");
             level++;
             startLevel();
         }

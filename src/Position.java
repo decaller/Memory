@@ -3,16 +3,17 @@ import java.util.ArrayList;
 
 /**
  * Created by HarridiIlman on 11/12/2015.
+ * ini untuk pasang posisi
  */
 public class Position {
 
     private ArrayList<String> pos = new ArrayList<>();
-    private LevelMaker makerSoal = new LevelMaker();
+
 
     public Position() {
     }
 
-    public void setCard(String content) { //set 2 card
+    public void setCard(String content) { //set 2 card yg sama karena memory game duh...
         for (int i = 1; i <= 2; i++){
             pos.add(content);
         }
@@ -24,7 +25,7 @@ public class Position {
     }
 
     public void randomize() {
-        //TODO randomize
+        //randomize nanti...
 
     }
 }

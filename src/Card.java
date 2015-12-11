@@ -4,8 +4,11 @@ import java.awt.event.ActionListener;
 
 /**
  * Created by HarridiIlman on 11/12/2015.
+ *
+ * ini button yg di modify agar bersifat seperti kartu
  */
-public class Card extends JButton implements ActionListener{
+public class Card extends JButton{ //TODO sebelumnya gw coba implement disini actionlistener nya yan.. tapi harus static kaya lw bilang
+    //akhirnya semua di main jadi harus static dan swing gak mau kalo variable nya bersifat static <- entah mengapa
 
     private int id;
     private String content;
@@ -18,7 +21,6 @@ public class Card extends JButton implements ActionListener{
         this.id = id;
         this.content = content;
         this.setText(content);
-        this.addActionListener(this);
     }
 
     public int getId() {
@@ -27,6 +29,7 @@ public class Card extends JButton implements ActionListener{
 
     public void setGuessed(boolean guessed) {
         this.guessed = guessed;
+        this.setText("guessed");
     }
 
     public boolean isGuessed() {
@@ -38,7 +41,12 @@ public class Card extends JButton implements ActionListener{
         return content;
     }
 
+    public void setOpen(boolean open) {
+        this.open = open;
+    }
+
     public boolean isOpen() {
+
         return open;
     }
 
@@ -49,10 +57,12 @@ public class Card extends JButton implements ActionListener{
 
     //TODO animation flip and open
 
-
+/**
     @Override
     public void actionPerformed(ActionEvent e) {
         open = true;
-        Menu.cardChecker(id,content);
+        cardChecker(id,content);
     }
+
+    **/
 }

@@ -7,6 +7,7 @@ public class LevelMaker {
 
     private int sumCard;
 
+    //pembuat level
     public Position makeLevel(int level, int sublevel) {
         switch (level){
             case 1 : {
