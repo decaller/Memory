@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
  *
  * ini button yg di modify agar bersifat seperti kartu
  */
-public class Card extends JButton{ //TODO sebelumnya gw coba implement disini actionlistener nya yan.. tapi harus static kaya lw bilang
+public class Card extends JButton implements ActionListener{ //TODO sebelumnya gw coba implement disini actionlistener nya yan.. tapi harus static kaya lw bilang
     //akhirnya semua di main jadi harus static dan swing gak mau kalo variable nya bersifat static <- entah mengapa
 
     private int id;
@@ -52,6 +52,12 @@ public class Card extends JButton{ //TODO sebelumnya gw coba implement disini ac
 
     public void close(){
         open = false;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        open = true;
+        cardChecker(id,content); //TODO ini yan..  method nya...
     }
 
 

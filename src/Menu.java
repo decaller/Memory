@@ -40,16 +40,7 @@ public class Menu {
             }
         });
 
-        //TODO ini masalah nya yan.. ini mau diimplementasikan ke seluruh kartu... define nya dibawah \/
-        kartu.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                kartu.setOpen(true);
-                int id = kartu.getId();
-                String content = kartu.getContent();
-                cardChecker(id,content);
-            }
-        });
+
 
     }
     //untuk mulai
