@@ -33,6 +33,9 @@ public class Menu {
 
     private void gameStart() {
         //TODO atur bar progress
+        gamePanel.removeAll();
+        gamePanel.repaint();
+
         for (int lvl = 1; lvl <= 3; lvl++){ //3 Level difficulty
             for (int sublvl = 1; sublvl <= 5-lvl; sublvl++){ //subelevel lebih sedikit seiring level meningkat
                 soal = makerSoal.makeLevel(lvl,sublvl);
@@ -47,16 +50,31 @@ public class Menu {
 
         ArrayList<String> isiKartu2 = soal.getPos();
 
-        int x = isiKartu2.size()/2;
-        int y = x - 1;
+        int x = 3;
+        int y =2;
+        switch (isiKartu2.size()){
+            case 12 : {
+                x = 4;
+                y = 3;
+                break;
+            }
+            case 20 : {
+                x = 5;
+                y = 4;
+                break;
+            }
+        }
         gamePanel.setLayout(new GridLayout(x,y,5,5)); // 5,5 margin
 
+
         for (String isiKartu : isiKartu2){ //buat kartu...
-            System.out.println("makeCard");
+            System.out.println(isiKartu);
             Card kartu = new Card(isiKartu);
             gamePanel.add(kartu);
         }
 
+        gamePanel.revalidate();
+        gamePanel.repaint();
 
         //TODO logic game
 
