@@ -21,6 +21,7 @@ public class Card extends JButton implements ActionListener{ //TODO sebelumnya g
         this.id = id;
         this.content = content;
         this.setText(content);
+        this.addActionListener(this); //ketinggalan
     }
 
     public int getId() {
