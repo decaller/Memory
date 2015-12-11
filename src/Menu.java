@@ -16,70 +16,126 @@ public class Menu {
     private JProgressBar timeProgressBar;
     private JProgressBar levelProgressBar;
     private JLabel highLevelLabel;
-    private JPanel gamePanel;
+    private static JPanel gamePanel;
     private JButton buttonStart;
 
-    private LevelMaker makerSoal = new LevelMaker();
-    private Position soal;
+    public static int level = 1;
+    public static int sublevel = 1;
+
+    private static LevelMaker makerSoal = new LevelMaker();
+
+    public static ArrayList<Card> cards;
+    public static String temp = null;
+    public static int tempId = 0;
+
 
     public Menu() {
         startGameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                gameStart();
+                startLevel();
+                //TODO timer
             }
         });
     }
 
-    private void gameStart() {
-        //TODO atur bar progress
+    private static void startLevel(){
+        //levelLabel.setText(Integer.toString(level));
+        //panelMenu.repaint();
+        startSubLevel();
+    }
+    private static void startSubLevel(){
+        Position soal = makerSoal.makeLevel(level,sublevel);
+        drawer(soal);
+    }
+
+    private static void drawer(Position soal){
+        //remove all
         gamePanel.removeAll();
         gamePanel.repaint();
 
-        for (int lvl = 1; lvl <= 3; lvl++){ //3 Level difficulty
-            for (int sublvl = 1; sublvl <= 5-lvl; sublvl++){ //subelevel lebih sedikit seiring level meningkat
-                soal = makerSoal.makeLevel(lvl,sublvl);
-                startSubLevel(soal);
-            }
-        }
-    }
-
-    private void startSubLevel(Position soal){
-        System.out.println("startSubLevel");
-        gamePanel.removeAll();
-
         ArrayList<String> isiKartu2 = soal.getPos();
+        cards = new ArrayList<>();
 
+        int y = 2;
         int x = 3;
-        int y =2;
         switch (isiKartu2.size()){
             case 12 : {
-                x = 4;
                 y = 3;
+                x = 4;
                 break;
             }
             case 20 : {
-                x = 5;
                 y = 4;
+                x = 5;
                 break;
             }
         }
-        gamePanel.setLayout(new GridLayout(x,y,5,5)); // 5,5 margin
+        gamePanel.setLayout(new GridLayout(y,x,5,5)); // 5,5 margin
 
-
+        int i = 1;
         for (String isiKartu : isiKartu2){ //buat kartu...
-            System.out.println(isiKartu);
-            Card kartu = new Card(isiKartu);
+            Card kartu = new Card(i, isiKartu);
             gamePanel.add(kartu);
+            cards.add(kartu);
+            i++;
         }
 
         gamePanel.revalidate();
         gamePanel.repaint();
 
-        //TODO logic game
+    }
 
+    public static void cardChecker(int id, String content){
+        if (temp == null){
+            temp = content;
+            tempId = id;
+        } else {
+            if (temp.equals(content)){
+                //set Guessed
+                for (Card kartu : cards){
+                    if (kartu.getId() == id || kartu.getId() == tempId){
+                        kartu.setGuessed(true);
+                    }
+                }
+                closeCardChecker();
+            } else {
+                temp = null;
+                tempId = 0;
+            }
+        }
+        //close all not guessed
+        for (Card kartu : cards){
+            if (!kartu.isGuessed()){
+                kartu.close();
+            }
+        }
 
     }
+
+    private static void closeCardChecker(){
+        for (Card kartu : cards){
+            if (!kartu.isGuessed()){
+                break;
+            } else {
+                replay();
+            }
+        }
+    }
+
+    private static void replay() {
+        if (sublevel <= 5-level){
+            //levelProgressBar.setValue(100*sublevel/(5-level));
+            sublevel++;
+            startSubLevel();
+        }
+
+        if (level <= 3){ // ada 3 level
+            level++;
+            startLevel();
+        }
+    }
+
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Menu");

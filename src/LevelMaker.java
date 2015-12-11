@@ -6,10 +6,9 @@ import java.util.Random;
 public class LevelMaker {
 
     private int sumCard;
-    private String typeCard;
 
-    public Position makeLevel(int lvl, int sublvl) {
-        switch (lvl){
+    public Position makeLevel(int level, int sublevel) {
+        switch (level){
             case 1 : {
                 sumCard = 6;
                 break;
@@ -28,7 +27,7 @@ public class LevelMaker {
         Position soal = new Position();
 
         for (int i = 1; i <= sumCard/2; i++){
-            switch (sublvl){
+            switch (sublevel){
                 case 1 : { //number
                     int number = rand.nextInt(100)+1;
                     soal.setCard(Integer.toString(number));

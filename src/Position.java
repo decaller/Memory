@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Position {
 
     private ArrayList<String> pos = new ArrayList<>();
-
+    private LevelMaker makerSoal = new LevelMaker();
 
     public Position() {
     }
@@ -16,6 +16,7 @@ public class Position {
         for (int i = 1; i <= 2; i++){
             pos.add(content);
         }
+
     }
 
     public ArrayList<String> getPos() {
@@ -23,6 +24,7 @@ public class Position {
     }
 
     public void randomize() {
+        //TODO randomize
 
     }
 }
