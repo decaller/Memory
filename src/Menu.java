@@ -19,14 +19,14 @@ public class Menu extends JButton {
     private JPanel gamePanel;
     private JButton buttonStart;
 
-    public int level = 1;
-    public int sublevel = 1;
+    private static int level = 1;
+    private static int sublevel = 1;
 
     private LevelMaker makerSoal = new LevelMaker();
 
-    private ArrayList<Card> cards = new ArrayList<>();
-    private String temp = null;
-    private int tempId = 0;
+    private static ArrayList<Card> cards = new ArrayList<>();
+    private static String temp = null;
+    private static int tempId = 0;
 
     private Card kartu;
 
@@ -45,20 +45,22 @@ public class Menu extends JButton {
     }
     //untuk mulai
     private void startLevel(){
+        System.out.println("start level");
         levelLabel.setText(Integer.toString(level));
         panelMenu.repaint();
         startSubLevel();
     }
     private void startSubLevel(){
+        System.out.println("start sublevel");
         Position soal = makerSoal.makeLevel(level,sublevel);
         drawer(soal);
     }
 
     //gambar di game panel
     private void drawer(Position soal){
+        System.out.println("drawing");
         //remove all
         gamePanel.removeAll();
-        gamePanel.repaint();
 
         ArrayList<String> isiKartu2 = soal.getPos();
         cards = new ArrayList<>();
@@ -81,14 +83,26 @@ public class Menu extends JButton {
 
         int i = 1;
         for (String isiKartu : isiKartu2){ //buat kartu...
-            kartu = new Card(i, isiKartu);// TODO disini buat kartunya yan.. apa pake abstract ya??
+            kartu = new Card(i, isiKartu);
             cards.add(kartu);
             gamePanel.add(kartu);
+            System.out.println("add kartu "+ kartu.getContent());
             i++;
         }
 
         gamePanel.revalidate();
         gamePanel.repaint();
+
+        panelMenu.revalidate();
+        panelMenu.repaint();
+
+        revalidate();
+        repaint();
+
+
+
+
+
 
     }
 
@@ -98,10 +112,11 @@ public class Menu extends JButton {
         if (temp == null){
             temp = content;
             tempId = id;
-            System.out.println(temp);
+            System.out.println("temp " + temp);
         } else {
-            System.out.println("activated");
+            System.out.println("checking...");
             if (temp.equals(content)){
+                System.out.println("guess right!");
                 //set Guessed
                 System.out.println("set guessed");
                 for (Card kartu : cards){
@@ -110,8 +125,8 @@ public class Menu extends JButton {
                         kartu.setGuessed(true);
                     }
                 }
-                guessedCardChecker();
             }
+
             System.out.println("nulling");
             temp = null;
             tempId = 0;
@@ -123,6 +138,7 @@ public class Menu extends JButton {
                 }
             }
         }
+        guessedCardChecker();
 
 
 
@@ -138,8 +154,6 @@ public class Menu extends JButton {
             }
         }
         if (unGuessed == 0){
-            //Menu reMenu = new Menu(); TODO ini gw coba juga yan.. bisa run tapi gak mau lanjut ke level selanjutnya
-            //reMenu.replay();
             this.replay();
         }
     }
@@ -147,6 +161,7 @@ public class Menu extends JButton {
     //ulang sublevel atau level
     private void replay() {
         System.out.println("Replay");
+
         if (sublevel <= 5-level){
             System.out.println("New SubLevel");
             levelProgressBar.setValue(100*sublevel/(5-level));

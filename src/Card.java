@@ -9,8 +9,7 @@ import java.awt.event.ActionListener;
  *
  * ini button yg di modify agar bersifat seperti kartu
  */
-public class Card extends Menu implements ActionListener{ //TODO sebelumnya gw coba implement disini actionlistener nya yan.. tapi harus static kaya lw bilang
-    //akhirnya semua di main jadi harus static dan swing gak mau kalo variable nya bersifat static <- entah mengapa
+public class Card extends Menu implements ActionListener{
 
     private int id;
     private String content;
@@ -57,23 +56,18 @@ public class Card extends Menu implements ActionListener{ //TODO sebelumnya gw c
 
     public void close(){
         open = false;
+        this.setText(content);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         open = true;
-        cardChecker(id,content); //TODO ini yan..  method nya...
+        this.setText("Open");
+        cardChecker(id,content);
     }
 
 
     //TODO animation flip and open
 
-/**
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        open = true;
-        cardChecker(id,content);
-    }
 
-    **/
 }
