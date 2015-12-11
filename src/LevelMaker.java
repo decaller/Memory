@@ -1,5 +1,62 @@
+import java.util.Random;
+
 /**
  * Created by HarridiIlman on 11/12/2015.
  */
 public class LevelMaker {
+
+    private int sumCard;
+    private String typeCard;
+
+    public Position makeLevel(int lvl, int sublvl) {
+        switch (lvl){
+            case 1 : {
+                sumCard = 10;
+                break;
+            }
+            case 2 : {
+                sumCard = 16;
+                break;
+            }
+            case 3 : {
+                sumCard = 20;
+                break;
+            }
+        }
+
+        Random rand = new Random();
+        Position soal = new Position();
+
+        for (int i = 1; i <= sumCard/2; i++){
+            switch (sublvl){
+                case 1 : { //number
+                    int number = rand.nextInt(100)+1;
+                    Position.setCard(Integer.toString(number));
+                    break;
+                }
+                case 2 : { //character
+                    int number = rand.nextInt(47);
+                    char symbol = (char) (48 + number);
+                    Position.setCard(Character.toString(symbol));
+                    break;
+                }
+                case 3 : { //big number
+                    int number = rand.nextInt(100000)+1;
+                    Position.setCard(Integer.toString(number));
+                    break;
+                }
+                case 4 : { //symbol
+                    int number = rand.nextInt(127);
+                    char symbol = (char) (number);
+                    Position.setCard(Character.toString(symbol));
+                    break;
+                }
+            }
+
+        }
+
+        soal.randomize(); //randomize position
+
+        return soal;
+    }
 }
