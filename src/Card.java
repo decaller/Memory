@@ -1,3 +1,5 @@
+import sun.applet.Main;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,7 +9,7 @@ import java.awt.event.ActionListener;
  *
  * ini button yg di modify agar bersifat seperti kartu
  */
-public class Card extends JButton implements ActionListener{ //TODO sebelumnya gw coba implement disini actionlistener nya yan.. tapi harus static kaya lw bilang
+public class Card extends Menu implements ActionListener{ //TODO sebelumnya gw coba implement disini actionlistener nya yan.. tapi harus static kaya lw bilang
     //akhirnya semua di main jadi harus static dan swing gak mau kalo variable nya bersifat static <- entah mengapa
 
     private int id;
@@ -22,6 +24,8 @@ public class Card extends JButton implements ActionListener{ //TODO sebelumnya g
         this.content = content;
         this.setText(content);
         this.addActionListener(this); //ketinggalan
+        this.guessed = false;
+        this.open = false;
     }
 
     public int getId() {

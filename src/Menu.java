@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
  * Created by HarridiIlman on 11/12/2015.
  */
-public class Menu {
+public class Menu extends JButton {
     private JPanel panelMenu;
     private JButton startGameButton;
     private JLabel highScoreLabel;
@@ -24,11 +24,11 @@ public class Menu {
 
     private LevelMaker makerSoal = new LevelMaker();
 
-    public ArrayList<Card> cards;
-    public String temp = null;
-    public int tempId = 0;
+    private ArrayList<Card> cards = new ArrayList<>();
+    private String temp = null;
+    private int tempId = 0;
 
-    public Card kartu;
+    private Card kartu;
 
     public Menu() {
 
@@ -82,8 +82,8 @@ public class Menu {
         int i = 1;
         for (String isiKartu : isiKartu2){ //buat kartu...
             kartu = new Card(i, isiKartu);// TODO disini buat kartunya yan.. apa pake abstract ya??
-            gamePanel.add(kartu);
             cards.add(kartu);
+            gamePanel.add(kartu);
             i++;
         }
 
@@ -98,31 +98,38 @@ public class Menu {
         if (temp == null){
             temp = content;
             tempId = id;
+            System.out.println(temp);
         } else {
+            System.out.println("activated");
             if (temp.equals(content)){
                 //set Guessed
+                System.out.println("set guessed");
                 for (Card kartu : cards){
-                    if (kartu.getId() == id || kartu.getId() == tempId){
+                    if (kartu.getId() == id | kartu.getId() == tempId){
+                        System.out.println("set guessed card");
                         kartu.setGuessed(true);
                     }
                 }
-                closeCardChecker();
+                guessedCardChecker();
             }
+            System.out.println("nulling");
             temp = null;
             tempId = 0;
 
-        }
-        //close all not guessed
-        for (Card kartu : cards){
-            if (!kartu.isGuessed()){
-                kartu.close();
+            //close all not guessed
+            for (Card kartu : cards){
+                if (!kartu.isGuessed()){
+                    kartu.close();
+                }
             }
         }
+
+
 
     }
 
     //check apa udah ketebak semua?
-    private void closeCardChecker(){
+    private void guessedCardChecker(){
         System.out.println("close card check");
         int unGuessed = 0;
         for (Card kartu : cards){
