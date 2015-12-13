@@ -2,12 +2,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
 /**
  * Created by HarridiIlman on 11/12/2015.
  */
-public class Menu {
+public class Menu extends JButton implements PropertyChangeListener, ActionListener{
     private JPanel panelMenu;
     private JButton startGameButton;
     private JLabel highScoreLabel;
@@ -19,55 +21,44 @@ public class Menu {
     private JPanel gamePanel;
     private JButton buttonStart;
 
-    public int level = 1;
-    public int sublevel = 1;
+    private static int level = 1;
+    private static int sublevel = 1;
 
     private LevelMaker makerSoal = new LevelMaker();
 
-    public ArrayList<Card> cards;
-    public String temp = null;
-    public int tempId = 0;
+    private static ArrayList<Card> cards = new ArrayList<>();
+    private static String temp = null;
+    private static int tempId = 0;
 
-    public Card kartu;
+    private Card kartu;
+
+
 
     public Menu() {
 
-        startGameButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                startLevel();
-                //nanti tambah timer
-            }
-        });
-
-        //TODO ini masalah nya yan.. ini mau diimplementasikan ke seluruh kartu... define nya dibawah \/
-        kartu.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                kartu.setOpen(true);
-                int id = kartu.getId();
-                String content = kartu.getContent();
-                cardChecker(id,content);
-            }
-        });
+        startGameButton.addActionListener(this);
 
     }
     //untuk mulai
     private void startLevel(){
+        System.out.println("start level "+level);
         levelLabel.setText(Integer.toString(level));
         panelMenu.repaint();
         startSubLevel();
     }
     private void startSubLevel(){
+        System.out.println("start sublevel "+sublevel);
         Position soal = makerSoal.makeLevel(level,sublevel);
         drawer(soal);
     }
 
     //gambar di game panel
     private void drawer(Position soal){
+        System.out.println("drawing");
         //remove all
+
         gamePanel.removeAll();
-        gamePanel.repaint();
+
 
         ArrayList<String> isiKartu2 = soal.getPos();
         cards = new ArrayList<>();
@@ -90,48 +81,64 @@ public class Menu {
 
         int i = 1;
         for (String isiKartu : isiKartu2){ //buat kartu...
-            kartu = new Card(i, isiKartu);// TODO disini buat kartunya yan.. apa pake abstract ya??
-            gamePanel.add(kartu);
+            kartu = new Card(i, isiKartu);
             cards.add(kartu);
+            gamePanel.add(kartu);
+            System.out.println("add kartu "+ kartu.getContent());
             i++;
         }
 
         gamePanel.revalidate();
-        gamePanel.repaint();
+        repaint();
 
     }
 
     //check apa kartunya sama?
     public void cardChecker(int id, String content){
         System.out.println("card check "+id);
+        levelProgressBar.setValue(20);
+
         if (temp == null){
             temp = content;
             tempId = id;
+            System.out.println("temp " + temp);
         } else {
+            System.out.println("checking...");
             if (temp.equals(content)){
+                System.out.println("guess right!");
                 //set Guessed
+                System.out.println("set guessed");
                 for (Card kartu : cards){
-                    if (kartu.getId() == id || kartu.getId() == tempId){
+                    if (kartu.getId() == id | kartu.getId() == tempId){
+                        System.out.println("set guessed card");
                         kartu.setGuessed(true);
+
+
                     }
+
+
                 }
-                closeCardChecker();
             }
+
+            System.out.println("nulling");
             temp = null;
             tempId = 0;
 
-        }
-        //close all not guessed
-        for (Card kartu : cards){
-            if (!kartu.isGuessed()){
-                kartu.close();
+            //close all not guessed
+            for (Card kartu : cards){
+                if (!kartu.isGuessed()){
+                    kartu.close();
+                }
             }
         }
+        guessedCardChecker();
+
+
 
     }
 
     //check apa udah ketebak semua?
-    private void closeCardChecker(){
+    private void guessedCardChecker(){
         System.out.println("close card check");
         int unGuessed = 0;
         for (Card kartu : cards){
@@ -140,18 +147,19 @@ public class Menu {
             }
         }
         if (unGuessed == 0){
-            //Menu reMenu = new Menu(); TODO ini gw coba juga yan.. bisa run tapi gak mau lanjut ke level selanjutnya
-            //reMenu.replay();
-            this.replay();
+            replay();
         }
     }
 
     //ulang sublevel atau level
     private void replay() {
         System.out.println("Replay");
+
         if (sublevel <= 5-level){
             System.out.println("New SubLevel");
+            System.out.println((levelProgressBar.getAccessibleContext()==null));
             levelProgressBar.setValue(100*sublevel/(5-level));
+            System.out.println("Set Progress "+ 100*sublevel/(5-level));
             sublevel++;
             startSubLevel();
         } else if (level <= 3){ // ada 3 level
@@ -169,4 +177,60 @@ public class Menu {
         frame.pack();
         frame.setVisible(true);
     }
+
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if ("progress" == evt.getPropertyName()) {
+            int progress = (Integer) evt.getNewValue();
+            levelProgressBar.setValue(progress);
+
+        }
+
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        startLevel();
+        levelProgressBar.setValue(50);
+
+        Task task = new Task();
+        task.addPropertyChangeListener(this);
+        task.execute();
+    }
+
+    class Task extends SwingWorker<Void, Void> {
+        /*
+         * Main task. Executed in background thread.
+         */
+        @Override
+        public Void doInBackground() {
+
+
+            //Initialize progress property.
+            setProgress(0);
+            while (100*sublevel/(5-level) < 100) {
+                //Sleep for up to one second.
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ignore) {}
+                //Make random progress.
+                setProgress(100*sublevel/(5-level));
+            }
+            return null;
+        }
+
+        /*
+         * Executed in event dispatching thread
+         */
+        @Override
+        public void done() {
+
+        }
+
+
+    }
+
+
 }

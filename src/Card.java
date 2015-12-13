@@ -1,3 +1,5 @@
+import sun.applet.Main;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,8 +9,7 @@ import java.awt.event.ActionListener;
  *
  * ini button yg di modify agar bersifat seperti kartu
  */
-public class Card extends JButton{ //TODO sebelumnya gw coba implement disini actionlistener nya yan.. tapi harus static kaya lw bilang
-    //akhirnya semua di main jadi harus static dan swing gak mau kalo variable nya bersifat static <- entah mengapa
+public class Card extends Menu implements ActionListener{
 
     private int id;
     private String content;
@@ -21,6 +22,9 @@ public class Card extends JButton{ //TODO sebelumnya gw coba implement disini ac
         this.id = id;
         this.content = content;
         this.setText(content);
+        this.addActionListener(this); //ketinggalan
+        this.guessed = false;
+        this.open = false;
     }
 
     public int getId() {
@@ -30,6 +34,7 @@ public class Card extends JButton{ //TODO sebelumnya gw coba implement disini ac
     public void setGuessed(boolean guessed) {
         this.guessed = guessed;
         this.setText("guessed");
+
     }
 
     public boolean isGuessed() {
@@ -52,17 +57,18 @@ public class Card extends JButton{ //TODO sebelumnya gw coba implement disini ac
 
     public void close(){
         open = false;
+        this.setText(content);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        open = true;
+        this.setText("Open");
+        cardChecker(id,content);
     }
 
 
     //TODO animation flip and open
 
-/**
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        open = true;
-        cardChecker(id,content);
-    }
 
-    **/
 }
