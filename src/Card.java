@@ -34,6 +34,7 @@ public class Card extends Menu implements ActionListener{
     public void setGuessed(boolean guessed) {
         this.guessed = guessed;
         this.setText("guessed");
+
     }
 
     public boolean isGuessed() {
