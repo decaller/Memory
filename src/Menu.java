@@ -106,7 +106,7 @@ public class Menu extends JButton implements ActionListener{
             temp = content;
             tempId = id;
             System.out.println("temp " + temp);
-        } else {
+        } else if (tempId != id){
             System.out.println("checking...");
             if (temp.equals(content)){
                 System.out.println("guess right!");
@@ -210,7 +210,7 @@ public class Menu extends JButton implements ActionListener{
                 guessedCardChecker();
 
                 int minute = time/600;
-                int second = time%600;
+                int second = (time%600)/10;
                 waktuLabel.setText(String.format("%02d",minute)  + ":" + String.format("%02d",second));
                 timeProgressBar.setValue(100* time/3000);
 

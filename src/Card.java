@@ -21,7 +21,7 @@ public class Card extends Menu implements ActionListener{
     public Card(int id, String content) {
         this.id = id;
         this.content = content;
-        this.setText(content);
+        //this.setText(content);
         this.addActionListener(this); //ketinggalan
         this.guessed = false;
         this.open = false;
@@ -33,7 +33,6 @@ public class Card extends Menu implements ActionListener{
 
     public void setGuessed(boolean guessed) {
         this.guessed = guessed;
-        this.setText("guessed");
 
     }
 
@@ -57,13 +56,13 @@ public class Card extends Menu implements ActionListener{
 
     public void close(){
         open = false;
-        this.setText(content);
+        this.setText("");
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         open = true;
-        this.setText("Open");
+        this.setText(content);
         cardChecker(id,content);
     }
 
