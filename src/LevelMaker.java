@@ -46,7 +46,7 @@ public class LevelMaker {
                     break;
                 }
                 case 4 : { //symbol
-                    int number = rand.nextInt(127);
+                    int number = rand.nextInt(100);
                     char symbol = (char) (number);
                     soal.setCard(Character.toString(symbol));
                     break;

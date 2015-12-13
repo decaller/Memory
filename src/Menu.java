@@ -1,3 +1,5 @@
+import com.sun.javafx.binding.StringFormatter;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,7 +11,7 @@ import java.util.ArrayList;
 /**
  * Created by HarridiIlman on 11/12/2015.
  */
-public class Menu extends JButton implements PropertyChangeListener, ActionListener{
+public class Menu extends JButton implements ActionListener{
     private JPanel panelMenu;
     private JButton startGameButton;
     private JLabel highScoreLabel;
@@ -23,6 +25,7 @@ public class Menu extends JButton implements PropertyChangeListener, ActionListe
 
     private static int level = 1;
     private static int sublevel = 1;
+    private static int fontSize = 40;
 
     private LevelMaker makerSoal = new LevelMaker();
 
@@ -42,7 +45,7 @@ public class Menu extends JButton implements PropertyChangeListener, ActionListe
     //untuk mulai
     private void startLevel(){
         System.out.println("start level "+level);
-        levelLabel.setText(Integer.toString(level));
+        levelLabel.setText("Level " + Integer.toString(level));
         panelMenu.repaint();
         startSubLevel();
     }
@@ -58,7 +61,6 @@ public class Menu extends JButton implements PropertyChangeListener, ActionListe
         //remove all
 
         gamePanel.removeAll();
-
 
         ArrayList<String> isiKartu2 = soal.getPos();
         cards = new ArrayList<>();
@@ -82,6 +84,8 @@ public class Menu extends JButton implements PropertyChangeListener, ActionListe
         int i = 1;
         for (String isiKartu : isiKartu2){ //buat kartu...
             kartu = new Card(i, isiKartu);
+
+            kartu.setFont(new Font("Arial", Font.PLAIN, fontSize));
             cards.add(kartu);
             gamePanel.add(kartu);
             System.out.println("add kartu "+ kartu.getContent());
@@ -131,7 +135,7 @@ public class Menu extends JButton implements PropertyChangeListener, ActionListe
                 }
             }
         }
-        guessedCardChecker();
+
 
 
 
@@ -155,17 +159,22 @@ public class Menu extends JButton implements PropertyChangeListener, ActionListe
     private void replay() {
         System.out.println("Replay");
 
-        if (sublevel <= 5-level){
+        if (sublevel < 5-level){
             System.out.println("New SubLevel");
-            System.out.println((levelProgressBar.getAccessibleContext()==null));
             levelProgressBar.setValue(100*sublevel/(5-level));
             System.out.println("Set Progress "+ 100*sublevel/(5-level));
             sublevel++;
             startSubLevel();
-        } else if (level <= 3){ // ada 3 level
+        } else if (level < 3){ // ada 3 level
             System.out.println("New Level");
+            levelProgressBar.setValue(0);
             level++;
+            sublevel = 0;
+            fontSize -= 10;
             startLevel();
+        } else {
+            sublevel++;
+            level++;
         }
     }
 
@@ -179,44 +188,36 @@ public class Menu extends JButton implements PropertyChangeListener, ActionListe
     }
 
 
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        if ("progress" == evt.getPropertyName()) {
-            int progress = (Integer) evt.getNewValue();
-            levelProgressBar.setValue(progress);
-
-        }
-
-
-    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         startLevel();
-        levelProgressBar.setValue(50);
-
         Task task = new Task();
-        task.addPropertyChangeListener(this);
         task.execute();
     }
 
     class Task extends SwingWorker<Void, Void> {
-        /*
-         * Main task. Executed in background thread.
-         */
+
         @Override
         public Void doInBackground() {
+        int time = 0;
+            while (level < 4) {
 
-
-            //Initialize progress property.
-            setProgress(0);
-            while (100*sublevel/(5-level) < 100) {
-                //Sleep for up to one second.
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException ignore) {}
-                //Make random progress.
-                setProgress(100*sublevel/(5-level));
+                time++;
+                guessedCardChecker();
+
+                int minute = time/600;
+                int second = time%600;
+                waktuLabel.setText(String.format("%02d",minute)  + ":" + String.format("%02d",second));
+                timeProgressBar.setValue(100* time/3000);
+
+                if (time > 3000){
+                    level = 4;
+                    sublevel = 0;
+                }
             }
             return null;
         }
@@ -226,6 +227,23 @@ public class Menu extends JButton implements PropertyChangeListener, ActionListe
          */
         @Override
         public void done() {
+            if (level > 3 && sublevel > 2){
+                gamePanel.removeAll();
+                gamePanel.revalidate();
+                repaint();
+                JLabel congrats = new JLabel("Selamat Anda Berhasil!");
+                gamePanel.add(congrats);
+                gamePanel.revalidate();
+                repaint();
+            } else {
+                gamePanel.removeAll();
+                gamePanel.revalidate();
+                repaint();
+                JLabel loss = new JLabel("Waktu Habis!");
+                gamePanel.add(loss);
+                gamePanel.revalidate();
+                repaint();
+            }
 
         }
 
