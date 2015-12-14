@@ -13,18 +13,23 @@ public class Card extends Menu implements ActionListener{
 
     private int id;
     private String content;
-    private boolean open;
-    private boolean guessed;
+    private boolean open = false;
+    private boolean guessed = false;
 
+    private Timer timer;
+
+    private boolean flipped = false;
+
+    private int width;
 
 
     public Card(int id, String content) {
         this.id = id;
         this.content = content;
-        //this.setText(content);
-        this.addActionListener(this); //ketinggalan
-        this.guessed = false;
-        this.open = false;
+
+
+        this.addActionListener(this);
+
     }
 
     public int getId() {
@@ -33,6 +38,7 @@ public class Card extends Menu implements ActionListener{
 
     public void setGuessed(boolean guessed) {
         this.guessed = guessed;
+        this.setText(content);
 
     }
 
@@ -45,25 +51,70 @@ public class Card extends Menu implements ActionListener{
         return content;
     }
 
-    public void setOpen(boolean open) {
-        this.open = open;
-    }
 
     public boolean isOpen() {
-
         return open;
     }
 
     public void close(){
+
         open = false;
-        this.setText("");
+
+        timer = new Timer(30, flip);
+        timer.setInitialDelay(300);
+        timer.start();
+
     }
+
+    ActionListener flip = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            if (!flipped){
+                setBounds(getBounds().x + 10 ,getBounds().y,getWidth() - 20,getHeight());
+
+                if (getWidth() <= 20){
+
+                    flipped = true;
+
+                    if (open) {
+                        setText(content);
+                    } else {
+                        setText("");
+                    }
+
+                }
+            }
+            if (flipped){
+                setBounds(getBounds().x - 10 ,getBounds().y,getWidth() + 20,getHeight());
+
+                if (getWidth() >= width-20){
+
+                    flipped = false;
+
+                    timer.stop();
+                }
+
+            }
+
+        }
+    };
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
         open = true;
-        this.setText(content);
+
+        width = getWidth();
+
+        timer = new Timer(30, flip);
+        timer.setInitialDelay(0);
+        timer.start();
+
         cardChecker(id,content);
+
+
+
     }
 
 

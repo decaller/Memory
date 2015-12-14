@@ -128,11 +128,15 @@ public class Menu extends JButton implements ActionListener{
             temp = null;
             tempId = 0;
 
+
             //close all not guessed
             for (Card kartu : cards){
-                if (!kartu.isGuessed()){
-                    kartu.close();
+                if (kartu.isOpen()){
+                    if (!kartu.isGuessed()){
+                        kartu.close();
+                    }
                 }
+
             }
         }
 
