@@ -2,31 +2,31 @@ import sun.applet.Main;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 
 /**
  * Created by HarridiIlman on 11/12/2015.
  *
  * ini button yg di modify agar bersifat seperti kartu
  */
-public class Card extends Menu implements ActionListener{
+public class Card extends Menu{
 
     private int id;
     private String content;
     private boolean open = false;
     private boolean guessed = false;
 
-    private Timer timer;
 
     private boolean flipped = false;
+    private boolean flipme = false;
 
     private int width;
+    private int posX;
 
 
     public Card(int id, String content) {
         this.id = id;
         this.content = content;
-
 
         this.addActionListener(this);
 
@@ -38,7 +38,6 @@ public class Card extends Menu implements ActionListener{
 
     public void setGuessed(boolean guessed) {
         this.guessed = guessed;
-        this.setText(content);
 
     }
 
@@ -56,29 +55,27 @@ public class Card extends Menu implements ActionListener{
         return open;
     }
 
-    public void close(){
-
-        open = false;
-
-        timer = new Timer(30, flip);
-        timer.setInitialDelay(300);
-        timer.start();
-
+    public boolean isFlipme() {
+        return flipme;
     }
 
-    ActionListener flip = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
+    public void close(){
+        open = false;
+        flipme = true;
+    }
+
+    public void flip() {
 
             if (!flipped){
-                setBounds(getBounds().x + 10 ,getBounds().y,getWidth() - 20,getHeight());
+                setBounds(getBounds().x + 25 ,getBounds().y,getWidth() - 50,getHeight());
 
-                if (getWidth() <= 20){
+                if (getWidth() <= 50){
 
                     flipped = true;
 
                     if (open) {
                         setText(content);
+
                     } else {
                         setText("");
                     }
@@ -86,34 +83,31 @@ public class Card extends Menu implements ActionListener{
                 }
             }
             if (flipped){
-                setBounds(getBounds().x - 10 ,getBounds().y,getWidth() + 20,getHeight());
+                setBounds(getBounds().x - 25 ,getBounds().y,getWidth() + 50,getHeight());
 
-                if (getWidth() >= width-20){
+                if (getWidth() >= width-100){
+                    setBounds(posX ,getBounds().y,width,getHeight());
 
                     flipped = false;
+                    flipme = false;
 
-                    timer.stop();
                 }
 
-            }
 
-        }
-    };
+
+            }
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        cardCloser();
         open = true;
 
+        posX = getBounds().x;
         width = getWidth();
-
-        timer = new Timer(30, flip);
-        timer.setInitialDelay(0);
-        timer.start();
+        flipme = true;
 
         cardChecker(id,content);
-
-
 
     }
 

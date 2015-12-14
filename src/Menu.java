@@ -14,12 +14,10 @@ import java.util.ArrayList;
 public class Menu extends JButton implements ActionListener{
     private JPanel panelMenu;
     private JButton startGameButton;
-    private JLabel highScoreLabel;
     private JLabel waktuLabel;
     private JLabel levelLabel;
     private JProgressBar timeProgressBar;
     private JProgressBar levelProgressBar;
-    private JLabel highLevelLabel;
     private JPanel gamePanel;
     private JButton buttonStart;
 
@@ -97,12 +95,29 @@ public class Menu extends JButton implements ActionListener{
 
     }
 
+    public void cardCloser(){
+        if (temp == null){
+            //close all not guessed
+            for (Card kartu : cards){
+                if (kartu.isOpen()){
+                    if (!kartu.isGuessed()){
+                        kartu.close();
+                    }
+                }
+
+            }
+        }
+    }
+
     //check apa kartunya sama?
     public void cardChecker(int id, String content){
         System.out.println("card check "+id);
         levelProgressBar.setValue(20);
 
         if (temp == null){
+
+
+
             temp = content;
             tempId = id;
             System.out.println("temp " + temp);
@@ -129,15 +144,7 @@ public class Menu extends JButton implements ActionListener{
             tempId = 0;
 
 
-            //close all not guessed
-            for (Card kartu : cards){
-                if (kartu.isOpen()){
-                    if (!kartu.isGuessed()){
-                        kartu.close();
-                    }
-                }
 
-            }
         }
 
 
@@ -208,22 +215,32 @@ public class Menu extends JButton implements ActionListener{
             while (level < 4) {
 
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(10);
                 } catch (InterruptedException ignore) {}
                 time++;
                 guessedCardChecker();
+                flippers();
 
-                int minute = time/600;
-                int second = (time%600)/10;
+                int minute = time/6000;
+                int second = (time%6000)/100;
                 waktuLabel.setText(String.format("%02d",minute)  + ":" + String.format("%02d",second));
-                timeProgressBar.setValue(100* time/3000);
+                timeProgressBar.setValue(100* time/15000);
 
-                if (time > 3000){
+                if (time > 15000){
                     level = 4;
                     sublevel = 0;
                 }
             }
             return null;
+        }
+
+        private void flippers() {
+            for (Card kartu : cards){
+                if (kartu.isFlipme()){
+                    kartu.flip();
+                }
+            }
+
         }
 
         /*
